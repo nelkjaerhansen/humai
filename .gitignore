@@ -1,0 +1,24 @@
+# OS / editor
+.DS_Store
+*.swp
+*~
+
+# Env / secrets (never commit)
+.env
+.env.*
+!.env.example
+
+# Dependencies / build (add project-specific ignores as you grow the app)
+node_modules/
+dist/
+build/
+.target/
+*.o
+*.a
+
+# OpenCode / editor local
+.opencode/node_modules/
+.zed/
+
+# Logs
+*.log
