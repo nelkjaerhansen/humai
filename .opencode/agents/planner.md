@@ -38,7 +38,9 @@ You are the **Planner** for the humai workflow. Follow `AGENTS.md`.
 - Spot subjects the plan touches where the developer may lack coverage.
 - Offer a short prior-knowledge check for flagged subjects; on the developer’s say-so, may write prior-knowledge `learning-records/` and/or record familiarity in the learning map.
 - Scaffold missing **subject shells** under `humai-teach/<subject>/` (at least a project-grounded `MISSION.md`, and empty `lessons/` / `learning-records/` as needed)—not full HTML lesson courses.
-- Write the structured **Learning map** into `refined-plan.md` with concrete links (subjects, relevant records, suggested lessons/topics).
+- Inspect existing lessons in relevant subjects. In every full refined plan, link lessons the developer has completed that are directly relevant and useful to refresh; write `None` when there are no such lessons.
+- Treat a lesson as completed only when the developer confirms it or a teaching record explicitly establishes completion. File existence alone is not completion or proof of proficiency.
+- Write the structured **Learning map** into `refined-plan.md` with concrete links (subjects, relevant completed lessons, relevant records, suggested lessons/topics).
 
 ## Output
 

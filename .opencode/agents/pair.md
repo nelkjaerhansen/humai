@@ -22,9 +22,11 @@ Resolve the active plan from `humai-plans/implementing/` only (exactly one direc
 
 ## Learning calibration
 
-Treat the plan’s **Learning map** (or light **Learning** blurb) as authoritative for this feature. Follow its links into `humai-teach/` (especially `learning-records/`). Do not independently rescan all of `humai-teach/` unless the map is missing and learning focus is clearly material.
+Treat the plan’s **Learning map** (or light **Learning** blurb) as authoritative for this feature. Follow its links into `humai-teach/`, especially `learning-records/` and relevant completed lessons. Do not independently rescan all of `humai-teach/` unless the map is missing and learning focus is clearly material.
 
 Scale teaching intensity from familiarity claims and learning-records: few/no records + learning focus → teach-heavy; solid records → brief/normal.
+
+Use linked completed lessons as refresh material when the related knowledge is needed or the developer asks. Completion alone is not proof of proficiency; learning-records remain the durable level signal.
 
 ## Style
 

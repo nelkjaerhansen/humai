@@ -3,7 +3,7 @@
 **Status:** Revised workflow, version 3  
 **Primary objective:** Keep the developer in control of implementation while using AI for completion, planning clarification, contextual discussion, and teaching—calibrated to the developer’s documented level of understanding.
 
-**Changes from v2:** Integrates a committed `humai-teach/` tree (Matt Pocock’s teach skill) as soft tutor context. Learning is never a hard gate on implementation. Planner curates a per-plan learning map; Pair dials teaching intensity from that map and `learning-records/`; Finalize may recommend lessons or records when gaps appear.
+**Changes from v2:** Integrates a committed `humai-teach/` tree (Matt Pocock’s teach skill) as soft tutor context. Learning is never a hard gate on implementation. Planner curates a per-plan learning map, including relevant completed lessons for refresh; Pair dials teaching intensity from that map and `learning-records/`; Finalize may recommend lessons or records when gaps appear.
 
 ---
 
@@ -30,8 +30,8 @@ A lighter path exists for small work: drop `work-notes.md` directly into `humai-
 | Role | Host | Responsibility |
 |---|---|---|
 | **Autocomplete / inline assist** | Zed | Predicts or answers about code the developer is already writing |
-| **Planner** | OpenCode | Challenges a rough plan, resolves ambiguity, produces a refined plan; may update domain docs; scaffolds teach subject shells and writes the plan’s learning map |
-| **Pair programmer** | OpenCode | Reads project and current work, teaches, hints, redirects; calibrates depth from the plan’s learning map and linked learning-records; does not edit production code or `humai-teach/` |
+| **Planner** | OpenCode | Challenges a rough plan, resolves ambiguity, produces a refined plan; may update domain docs; scaffolds teach subject shells and writes the plan’s learning map, including relevant completed lessons for refresh |
+| **Pair programmer** | OpenCode | Reads project and current work, teaches, hints, redirects; calibrates depth from the plan’s learning map and linked learning-records; may refresh from linked completed lessons; does not edit production code or `humai-teach/` |
 | **Teach sessions** | OpenCode (teach skill) | Formal lessons, glossaries, and learning-records inside `humai-teach/<subject>/` (developer invokes after `cd` into that subject) |
 | **Finalize** | OpenCode | Verifies completion with the developer, records outcome, archives the plan; may recommend lessons/learning-records; may append a learning-record only on explicit developer confirmation |
 | **Models** | ChatGPT subscription | Used from Zed and OpenCode |
@@ -47,7 +47,7 @@ active plan under humai-plans/implementing/
 CONTEXT.md
 relevant ADRs
 humai-teach/<subject>/ via links in the active plan
-  (especially learning-records/)
+  (especially learning-records/ and relevant completed lessons)
 current code
 recent changes or Git diff
 lint and test output
@@ -160,6 +160,7 @@ Rules:
 - Each `humai-teach/<subject>/` is a **full teach-skill workspace** (one mission per workspace).
 - **Subject grain:** broad craft buckets (`c-language`, `raylib`, `game-architecture`). Missions and out-of-scope inside each keep focus on what *this project* needs next. Missions **may expand** as the project demands new skills in that craft. Split a new subject only when the craft clearly differs.
 - **Proof of level:** `learning-records/` are the durable signal (demonstrated understanding or stated prior knowledge—not mere lesson coverage).
+- **Completed lessons:** file existence alone does not establish completion. Planner links a lesson as completed only when the developer confirms it or a teaching record explicitly establishes completion. These links support refresh; they are not proof of level.
 - **No global teach dashboard.** The per-plan learning map in `refined-plan.md` (or a light blurb in `work-notes.md`) is the handoff artifact. Subject folders accumulate curriculum over time.
 - **Invocation:** always `cd humai-teach/<subject>` (or open that folder as the workspace) before running the teach skill. Running teach from the repo root will mistreat the project root as the teaching workspace.
 - **`CONTEXT.md` vs teach glossaries:** strict split. `CONTEXT.md` = *this product’s* language (entities, rules, mechanics). `humai-teach/<subject>/GLOSSARY.md` (and reference docs) = *general craft* (language, library, patterns). Do not copy teach glossaries into `CONTEXT.md`. Rarely promote a term into `CONTEXT.md` only when it has become project domain language.
@@ -360,6 +361,11 @@ Enough for Pair to dial down immediately even before records exist.
 
 Links to `humai-teach/<subject>/` workspaces relevant to this plan.
 
+### Relevant completed lessons
+
+Direct links to existing lessons the developer has completed that are relevant and useful to refresh for this plan, or `None`.
+Completion must be developer-confirmed or explicit in a teaching record; file existence alone is not completion or proof of proficiency.
+
 ### Relevant learning-records
 
 Links to existing records Pair should treat as floor for teaching intensity.
@@ -487,7 +493,9 @@ Planner:
   - Spots subjects the plan touches where the developer may lack coverage
   - Offers a short prior-knowledge check for flagged subjects; on the developer’s say-so, may write prior-knowledge `learning-records/` and/or record familiarity in the learning map
   - Scaffolds missing **subject shells** under `humai-teach/<subject>/` (at least a project-grounded `MISSION.md`, and empty `lessons/` / `learning-records/` as needed)—not full HTML lesson courses
-  - Writes the structured **Learning map** into `refined-plan.md` with concrete links (subjects, relevant records, suggested lessons/topics)
+  - Inspects existing lessons in relevant subjects and, in every full refined plan, links directly relevant lessons the developer has completed for refresh; writes `None` when there are none
+  - Treats a lesson as completed only when the developer confirms it or a teaching record explicitly establishes completion; file existence alone is not completion or proof of proficiency
+  - Writes the structured **Learning map** into `refined-plan.md` with concrete links (subjects, relevant completed lessons, relevant records, suggested lessons/topics)
   - Does not treat missing lessons as blocking questions
 
 When grilling is complete, Planner writes or updates `refined-plan.md` in the same directory using the repository template (must-read block first; keep it human-skimmable).
@@ -564,7 +572,8 @@ Two learning paths:
 - Follow `AGENTS.md`
 - Resolve active plan from `humai-plans/implementing/` only
 - Support both `refined-plan.md` and `work-notes.md`
-- **Learning calibration:** treat the plan’s learning map (or light Learning blurb) as authoritative for this feature; follow its links into `humai-teach/` (especially `learning-records/`). Do not independently rescan all of `humai-teach/` unless the map is missing and learning focus is clearly material
+- **Learning calibration:** treat the plan’s learning map (or light Learning blurb) as authoritative for this feature; follow its links into `humai-teach/` (especially `learning-records/` and relevant completed lessons). Do not independently rescan all of `humai-teach/` unless the map is missing and learning focus is clearly material
+- Use linked completed lessons as refresh material when relevant or requested. Completion alone is not proof of proficiency; learning-records remain the durable level signal
 - Default: at most four short sentences
 - Prefer one useful question or hint over a complete solution
 - If the approach is sound: confirm briefly and stop
@@ -580,7 +589,7 @@ Two learning paths:
 
 | Command | Purpose |
 |---|---|
-| `pair-start` | Rehydrate: active plan, slice if known, top acceptance criterion or current todo, learning map / intensity posture, material gaps, ready? |
+| `pair-start` | Rehydrate: active plan, slice if known, top acceptance criterion or current todo, learning map / intensity posture, one material link if present (prefer a completed lesson when refresh would help), material gaps, ready? |
 | `nudge` | One Socratic hint; no code; max two sentences |
 | `check` | Single most consequential issue vs plan + supplied context; or “No material concern found.” May include one learning next-step if material |
 | `deep` | Temporarily lift brevity for a detailed explanation; still read-only |
@@ -592,7 +601,7 @@ Use `check` at semantic checkpoints (after choosing an approach, finishing a sli
 
 **Permissions:** allow edits under `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, **`humai-teach/**`**; deny production code edits.
 
-**Prompt focus:** planning-only role, docs hygiene, load `grill-with-docs` for feature work, follow `AGENTS.md`, build learning map + subject shells as in §6.3—not full course authorship during grilling.
+**Prompt focus:** planning-only role, docs hygiene, load `grill-with-docs` for feature work, follow `AGENTS.md`, build learning map + subject shells as in §6.3, and link relevant completed lessons for refresh—not full course authorship during grilling.
 
 ### 8.3 Finalize
 
@@ -663,8 +672,10 @@ Learning gaps never block plan moves.
 Committed subject workspaces. Broad craft subjects; expanding missions OK.
 cd humai-teach/<subject> before running the teach skill.
 learning-records/ = durable proficiency signal.
-Planner may scaffold shells + write records (prior knowledge) and plan learning maps.
-Pair: read-only on humai-teach/.
+Lesson file existence does not prove completion; completion must be confirmed or recorded.
+Planner may scaffold shells + write records (prior knowledge), and every full learning map
+links relevant completed lessons for refresh or says None.
+Pair: read-only on humai-teach/; may refresh from completed lessons linked by the plan.
 Finalize: may recommend; may append a record only on explicit confirmation.
 
 ## CONTEXT.md
@@ -784,6 +795,7 @@ Observe:
 - Did `work-notes.md` suffice for small work without ceremony?
 - Did Pair steer/teach usefully without writing code?
 - Did the learning map calibrate Pair without blocking progress?
+- Did links to relevant completed lessons make refresh easy without being mistaken for proficiency evidence?
 - Did Planner subject shells stay thin (not accidental courses)?
 - Did formal teach sessions help when used, without becoming mandatory?
 - Did Finalize learning recommendations feel useful?
@@ -828,7 +840,7 @@ After the trial, change only parts that caused measurable friction.
 
 - [ ] Write `rough-plan.md` in `drafts/` (optional Learning focus)
 - [ ] Move to `grilling/`; run Planner + `grill-with-docs`
-- [ ] Review learning map + any new `humai-teach/<subject>/` shells
+- [ ] Review learning map, relevant completed-lesson refresh links, and any new `humai-teach/<subject>/` shells
 - [ ] Produce and review `refined-plan.md` through `refined/`
 - [ ] Move to `implementing/` when accepted; Pair with pair-start
 - [ ] Optionally take suggested teach lessons; or learn in-flight
@@ -864,6 +876,7 @@ resolve terminology
 identify edge cases
 spot learning subjects; prior-knowledge check
 scaffold humai-teach/<subject>/ shells when needed
+find relevant completed lessons for refresh
 write refined-plan.md (including Learning map)
 optionally update CONTEXT.md / ADR / learning-records
 
@@ -876,7 +889,7 @@ review → refined/ → implementing/
         ↓
 
 OPENCODE PAIR
-pair-start (plan + learning map → intensity)
+pair-start (plan + learning map → intensity + relevant refresh)
 read-only
 teach / hint / redirect
 one next learning step at checkpoints when material

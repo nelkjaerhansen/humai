@@ -52,9 +52,10 @@ Committed subject workspaces under `humai-teach/<subject>/`. Broad craft subject
 Always `cd humai-teach/<subject>` (or open that folder as the workspace) before running the teach skill. Never run teach from the repo root.
 
 `learning-records/` = durable proficiency signal (not mere lesson coverage).
+An existing lesson file does not prove completion. Treat a lesson as completed only when the developer confirms it or a teaching record explicitly says so.
 
-- **Planner** may scaffold subject shells, write prior-knowledge records (on developer say-so), and author the plan learning map. Does not author full courses during grilling.
-- **Pair** is read-only on `humai-teach/`.
+- **Planner** may scaffold subject shells, write prior-knowledge records (on developer say-so), and author the plan learning map. For every full refined plan, inspect relevant subjects and link directly relevant completed lessons for refresh, or state `None`. Does not author full courses during grilling.
+- **Pair** is read-only on `humai-teach/`. It may use completed lessons linked by the plan as refresh material; completion does not replace learning-record evidence.
 - **Finalize** may recommend lessons/records; may append a learning-record only on explicit developer confirmation.
 
 ## CONTEXT.md

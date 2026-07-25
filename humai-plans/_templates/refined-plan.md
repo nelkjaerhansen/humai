@@ -97,6 +97,11 @@ Enough for Pair to dial down immediately even before records exist.
 
 Links to `humai-teach/<subject>/` workspaces relevant to this plan.
 
+### Relevant completed lessons
+
+Direct links to existing lessons the developer has completed that are relevant and useful to refresh for this plan, or `None`.
+Completion must be developer-confirmed or explicit in a teaching record; file existence alone is not completion or proof of proficiency.
+
 ### Relevant learning-records
 
 Links to existing records Pair should treat as floor for teaching intensity.

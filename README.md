@@ -62,7 +62,7 @@ Agents do not move plan folders for you (except Finalize after you approve archi
 ```text
 YOU          write humai-plans/drafts/<slug>/rough-plan.md
 YOU          move → humai-plans/grilling/<slug>
-PLANNER      grill (grill-with-docs) → refined-plan.md (+ learning map)
+PLANNER      grill (grill-with-docs) → refined-plan.md (+ learning map and refresh links)
 YOU          review → refined/ → implementing/
 YOU          optionally: cd humai-teach/<subject> → teach skill
 YOU + PAIR   implement (Zed completion + Pair checkpoints)
@@ -75,7 +75,7 @@ Numbered:
 1. Copy `humai-plans/_templates/rough-plan.md` to `humai-plans/drafts/<slug>/rough-plan.md` and write it (include learning focus if useful).
 2. Move that directory to `humai-plans/grilling/<slug>`.
 3. In OpenCode, switch to **Planner**. Point it at the rough plan and start grilling (`grill-with-docs` for codebase work).
-4. Review `refined-plan.md` (including the learning map and any new `humai-teach/<subject>/` shells).
+4. Review `refined-plan.md` (including the learning map, relevant completed lessons for refresh, and any new `humai-teach/<subject>/` shells).
 5. Move `grilling/<slug>` → `refined/<slug>`, then → `implementing/<slug>` when you accept and coding starts.
 6. Switch to **Pair**, run `/pair-start`, write code yourself. Use `/nudge`, `/check`, `/deep`, `/show-code` as needed.
 7. Optional formal learning: `cd humai-teach/<subject>` then run the teach skill—never from the repo root.
@@ -107,7 +107,8 @@ Thin Pair commands: `/pair-start`, `/nudge`, `/check`, `/deep`, `/show-code`.
 
 - Missing lessons never block `refined` → `implementing`.
 - Planner may scaffold empty subject shells; you fill them via teach sessions when you want.
-- Pair dials teaching from the plan’s learning map and `learning-records/`.
+- Planner links relevant lessons you have completed in every full refined plan so Pair can use them for refresh; an existing lesson file alone does not count as completion.
+- Pair dials teaching from the plan’s learning map and `learning-records/`; lesson completion is not proficiency evidence.
 - Prefer a formal teach session when Pair suggests a lesson or you get stuck twice on the same confusion; otherwise learn in-flight with Pair.
 
 ---
