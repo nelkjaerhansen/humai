@@ -47,6 +47,8 @@ Repeat only for decisions important to implementing this feature.
 
 ## Implementation slices
 
+Small vertical results. Each slice should leave the product buildable/runnable.
+
 ### Slice 1: <small vertical result>
 
 - [ ] Implementation
