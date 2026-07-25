@@ -62,7 +62,7 @@ Agents do not move plan folders for you (except Finalize after you approve archi
 ```text
 YOU          write humai-plans/drafts/<slug>/rough-plan.md
 YOU          move → humai-plans/grilling/<slug>
-PLANNER      grill (grill-with-docs) → refined-plan.md (+ learning map and refresh links)
+PLANNER      grill + architecture fit → refined-plan.md (+ learning map and refresh links)
 YOU          review → refined/ → implementing/
 YOU          optionally: cd humai-teach/<subject> → teach skill
 YOU + PAIR   implement (Zed completion + Pair checkpoints)
@@ -74,8 +74,8 @@ Numbered:
 
 1. Copy `humai-plans/_templates/rough-plan.md` to `humai-plans/drafts/<slug>/rough-plan.md` and write it (include learning focus if useful).
 2. Move that directory to `humai-plans/grilling/<slug>`.
-3. In OpenCode, switch to **Planner**. Point it at the rough plan and start grilling (`grill-with-docs` for codebase work).
-4. Review `refined-plan.md` (including the learning map, relevant completed lessons for refresh, and any new `humai-teach/<subject>/` shells).
+3. In OpenCode, switch to **Planner**. Point it at the rough plan and start grilling (`grill-with-docs` for codebase work); Planner also checks the simplest architecture fit for known requirements.
+4. Review `refined-plan.md` (including Architecture fit, the learning map, relevant completed lessons for refresh, and any new `humai-teach/<subject>/` shells).
 5. Move `grilling/<slug>` → `refined/<slug>`, then → `implementing/<slug>` when you accept and coding starts.
 6. Switch to **Pair**, run `/pair-start`, write code yourself. Use `/nudge`, `/check`, `/deep`, `/show-code` as needed.
 7. Optional formal learning: `cd humai-teach/<subject>` then run the teach skill—never from the repo root.
@@ -95,7 +95,7 @@ Trivial fixes (typo, lint, obvious one-liner): no plan—just commit.
 
 | Agent | You use it for | Edits |
 |---|---|---|
-| **Planner** | Grill rough plans; produce refined plans + learning maps | `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, `humai-teach/**` |
+| **Planner** | Grill rough plans; assess bounded architecture fit; produce refined plans + learning maps | `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, `humai-teach/**` |
 | **Pair** | Plan-aware hints, teaching, checkpoints while you code | Nothing (read-only) |
 | **Finalize** | Outcome, verification notes, archive on approval | Docs allowlist; `humai-teach/` only to append a confirmed learning-record |
 

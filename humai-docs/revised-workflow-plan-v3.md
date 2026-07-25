@@ -3,7 +3,7 @@
 **Status:** Revised workflow, version 3  
 **Primary objective:** Keep the developer in control of implementation while using AI for completion, planning clarification, contextual discussion, and teaching—calibrated to the developer’s documented level of understanding.
 
-**Changes from v2:** Integrates a committed `humai-teach/` tree (Matt Pocock’s teach skill) as soft tutor context. Learning is never a hard gate on implementation. Planner curates a per-plan learning map, including relevant completed lessons for refresh; Pair dials teaching intensity from that map and `learning-records/`; Finalize may recommend lessons or records when gaps appear.
+**Changes from v2:** Integrates a committed `humai-teach/` tree (Matt Pocock’s teach skill) as soft tutor context. Learning is never a hard gate on implementation. Planner performs a bounded architecture-fit pass and curates a per-plan learning map, including relevant completed lessons for refresh; Pair dials teaching intensity from that map and `learning-records/`; Finalize may recommend lessons or records when gaps appear.
 
 ---
 
@@ -30,7 +30,7 @@ A lighter path exists for small work: drop `work-notes.md` directly into `humai-
 | Role | Host | Responsibility |
 |---|---|---|
 | **Autocomplete / inline assist** | Zed | Predicts or answers about code the developer is already writing |
-| **Planner** | OpenCode | Challenges a rough plan, resolves ambiguity, produces a refined plan; may update domain docs; scaffolds teach subject shells and writes the plan’s learning map, including relevant completed lessons for refresh |
+| **Planner** | OpenCode | Challenges a rough plan, resolves ambiguity, checks the simplest architecture fit for known requirements, and produces a refined plan; may update domain docs; scaffolds teach subject shells and writes the plan’s learning map, including relevant completed lessons for refresh |
 | **Pair programmer** | OpenCode | Reads project and current work, teaches, hints, redirects; calibrates depth from the plan’s learning map and linked learning-records; may refresh from linked completed lessons; does not edit production code or `humai-teach/` |
 | **Teach sessions** | OpenCode (teach skill) | Formal lessons, glossaries, and learning-records inside `humai-teach/<subject>/` (developer invokes after `cd` into that subject) |
 | **Finalize** | OpenCode | Verifies completion with the developer, records outcome, archives the plan; may recommend lessons/learning-records; may append a learning-record only on explicit developer confirmation |
@@ -125,7 +125,13 @@ Mid-lifecycle moves are manual in v1. Deterministic scripts (`plan start`, `plan
 
 **Learning is not a lifecycle gate.** Missing lessons or learning-records never block `refined` → `implementing`. They only change how aggressively Pair (and suggestions from Finalize) teach.
 
-### 2.5 ADRs are exceptional
+### 2.5 Architecture is deliberate but bounded
+
+Every full refined plan gets a brief architecture-fit pass grounded in the current system. Planner chooses the simplest structure that supports known requirements, calls out obvious material wins in responsibilities, boundaries, data flow, or dependency direction, and records "no architectural change" when the existing structure is already the best fit.
+
+This is not permission for speculative future-proofing, abstractions without current pressure, or redesigning unrelated areas.
+
+### 2.6 ADRs are exceptional
 
 Create an Architecture Decision Record only when all are true:
 
@@ -133,9 +139,11 @@ Create an Architecture Decision Record only when all are true:
 2. A future developer would reasonably wonder why it was chosen.
 3. Real alternatives and trade-offs were considered.
 
-`CONTEXT.md` is a domain glossary, not an implementation plan. Normal implementation choices stay in the refined plan, work notes, or code.
+`CONTEXT.md` remains a domain glossary, not an implementation plan.
 
-### 2.6 Teaching lives under `humai-teach/` (soft tutor context)
+Considering architecture does not make every choice ADR-worthy. Normal implementation choices stay in the refined plan, work notes, or code.
+
+### 2.7 Teaching lives under `humai-teach/` (soft tutor context)
 
 Committed in the same project repository:
 
@@ -304,6 +312,12 @@ What this implementation deliberately excludes.
 **Consequences:**
 
 Repeat only for decisions important to implementing this feature.
+
+## Architecture fit
+
+How does the solution fit the current system, and what is the simplest structure that supports known requirements?
+Note only material responsibilities, boundaries, data flow, dependency direction, or obvious architecture wins.
+Prefer established patterns; avoid speculative abstractions and unrelated redesign. `No architectural change` is a valid result.
 
 ## Acceptance criteria
 
@@ -487,6 +501,8 @@ Planner:
 - Checks domain language in `CONTEXT.md`
 - Tests assumptions with concrete scenarios
 - Updates `CONTEXT.md` only with durable terminology
+- Takes a bounded architecture pass grounded in the existing system: chooses the simplest structure for known requirements, notes obvious material wins, and records "no architectural change" when appropriate
+- Avoids speculative abstractions, hypothetical future-proofing, and redesign of unrelated areas
 - Offers ADRs sparingly when criteria are met
 - Does not implement production code
 - **Learning (soft tutor prep):**
@@ -502,7 +518,7 @@ When grilling is complete, Planner writes or updates `refined-plan.md` in the sa
 
 ### 6.4 After grilling
 
-1. Developer reviews `refined-plan.md` (including the learning map)
+1. Developer reviews `refined-plan.md` (including Architecture fit and the learning map)
 2. Ensure no blocking questions remain (learning gaps are not blocking)
 3. Move: `grilling` → `refined`
 4. When accepting and coding starts: `refined` → `implementing`
@@ -601,7 +617,7 @@ Use `check` at semantic checkpoints (after choosing an approach, finishing a sli
 
 **Permissions:** allow edits under `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, **`humai-teach/**`**; deny production code edits.
 
-**Prompt focus:** planning-only role, docs hygiene, load `grill-with-docs` for feature work, follow `AGENTS.md`, build learning map + subject shells as in §6.3, and link relevant completed lessons for refresh—not full course authorship during grilling.
+**Prompt focus:** planning-only role, docs hygiene, load `grill-with-docs` for feature work, follow `AGENTS.md`, perform the bounded architecture-fit pass from §6.3, build learning map + subject shells, and link relevant completed lessons for refresh—not speculative architecture or full course authorship during grilling.
 
 ### 8.3 Finalize
 
@@ -677,6 +693,13 @@ Planner may scaffold shells + write records (prior knowledge), and every full le
 links relevant completed lessons for refresh or says None.
 Pair: read-only on humai-teach/; may refresh from completed lessons linked by the plan.
 Finalize: may recommend; may append a record only on explicit confirmation.
+
+## Architecture planning
+Every full refined plan gets a bounded architecture pass grounded in the current system.
+Choose the simplest structure for known requirements, capture obvious material wins,
+prefer established patterns, and record no architectural change when they already fit.
+Avoid speculative abstractions, hypothetical future-proofing, and unrelated redesign.
+Architecture consideration does not make an ADR mandatory.
 
 ## CONTEXT.md
 Domain glossary only (this product). No feature plans, implementation dumps,
@@ -782,6 +805,10 @@ Suggested lessons and empty subject shells are tutor fuel. The developer may ski
 
 Scaffold shells and a short learning map. Real lessons (HTML, citations, ZPD) belong in teach-skill sessions.
 
+### 12.10 Do not overdesign during the architecture pass
+
+Planner should notice obvious structural wins for the solution at hand, not design for imagined future systems. Prefer the current architecture when it fits, the smallest justified change when it does not, and abstractions only under present pressure.
+
 ---
 
 ## 13. Trial and evaluation
@@ -794,6 +821,7 @@ Observe:
 - Was the refined must-read block usable while coding?
 - Did `work-notes.md` suffice for small work without ceremony?
 - Did Pair steer/teach usefully without writing code?
+- Did Planner identify useful architecture improvements without speculative design or unnecessary abstractions?
 - Did the learning map calibrate Pair without blocking progress?
 - Did links to relevant completed lessons make refresh easy without being mistaken for proficiency evidence?
 - Did Planner subject shells stay thin (not accidental courses)?
@@ -814,7 +842,7 @@ After the trial, change only parts that caused measurable friction.
 - [ ] Add `AGENTS.md` (shared law only, including humai-teach/ rules)
 - [ ] Add `CONTEXT.md`
 - [ ] Add `humai-plans/` with the six lifecycle directories
-- [ ] Add rough and refined templates (including Learning map on refined)
+- [ ] Add rough and refined templates (including Architecture fit and Learning map on refined)
 - [ ] Add `humai-docs/adr/`
 - [ ] Document light-path `work-notes.md` convention
 - [ ] Add `humai-teach/README.md` (cd-into-subject rule)
@@ -824,7 +852,7 @@ After the trial, change only parts that caused measurable friction.
 
 - [ ] Configure ChatGPT / OpenAI models via subscription or provider settings
 - [ ] Create **Pair** agent (edit denied; teaching-oriented prompt; read teach via plan links)
-- [ ] Create **Planner** agent (docs allowlist including `humai-teach/**`; load `grill-with-docs`)
+- [ ] Create **Planner** agent (bounded architecture pass; docs allowlist including `humai-teach/**`; load `grill-with-docs`)
 - [ ] Create **Finalize** agent/command (learning follow-ups; record append only on confirm)
 - [ ] Add thin commands: pair-start, nudge, check, deep, show-code
 - [ ] Install `grill-with-docs` (and optionally `grill-me`) where OpenCode can load skills
@@ -840,6 +868,7 @@ After the trial, change only parts that caused measurable friction.
 
 - [ ] Write `rough-plan.md` in `drafts/` (optional Learning focus)
 - [ ] Move to `grilling/`; run Planner + `grill-with-docs`
+- [ ] Review Architecture fit for the simplest justified structure, including `No architectural change` when appropriate
 - [ ] Review learning map, relevant completed-lesson refresh links, and any new `humai-teach/<subject>/` shells
 - [ ] Produce and review `refined-plan.md` through `refined/`
 - [ ] Move to `implementing/` when accepted; Pair with pair-start
@@ -874,6 +903,7 @@ challenge assumptions
 inspect the codebase
 resolve terminology
 identify edge cases
+assess the simplest architecture fit; avoid speculative abstractions
 spot learning subjects; prior-knowledge check
 scaffold humai-teach/<subject>/ shells when needed
 find relevant completed lessons for refresh

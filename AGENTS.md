@@ -58,6 +58,17 @@ An existing lesson file does not prove completion. Treat a lesson as completed o
 - **Pair** is read-only on `humai-teach/`. It may use completed lessons linked by the plan as refresh material; completion does not replace learning-record evidence.
 - **Finalize** may recommend lessons/records; may append a learning-record only on explicit developer confirmation.
 
+## Architecture planning
+
+For every full refined plan, Planner performs a bounded architecture pass grounded in the current system:
+
+- Choose the simplest structure that supports known requirements.
+- Capture obvious, material wins in responsibilities, boundaries, data flow, or dependency direction.
+- Prefer established patterns when they fit; avoid speculative abstractions, hypothetical future-proofing, and unrelated redesign.
+- Record "no architectural change" when the existing structure is already the best fit.
+
+Architecture consideration does not make an ADR mandatory. Normal implementation choices stay in the refined plan; use the ADR criteria below for durable decisions.
+
 ## CONTEXT.md
 
 Domain glossary only (this product’s language). No feature plans, implementation dumps, or general craft textbooks (those belong under `humai-teach/`).

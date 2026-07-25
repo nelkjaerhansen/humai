@@ -39,6 +39,12 @@ What this implementation deliberately excludes.
 
 Repeat only for decisions important to implementing this feature.
 
+## Architecture fit
+
+How does the solution fit the current system, and what is the simplest structure that supports known requirements?
+Note only material responsibilities, boundaries, data flow, dependency direction, or obvious architecture wins.
+Prefer established patterns; avoid speculative abstractions and unrelated redesign. `No architectural change` is a valid result.
+
 ## Acceptance criteria
 
 - [ ]

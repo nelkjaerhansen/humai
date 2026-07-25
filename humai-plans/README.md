@@ -14,8 +14,8 @@ Plan location is the authoritative status. Do not maintain a separate dashboard.
 ## Full path
 
 1. Copy `humai-plans/_templates/rough-plan.md` into `drafts/<slug>/rough-plan.md` and write it yourself.
-2. Move `drafts/<slug>` → `grilling/<slug>` and run **Planner** + `grill-with-docs`.
-3. Review `refined-plan.md`, including links to relevant completed lessons for refresh → move to `refined/` → `implementing/` when you accept and coding starts.
+2. Move `drafts/<slug>` → `grilling/<slug>` and run **Planner** + `grill-with-docs`; Planner includes a bounded architecture-fit pass.
+3. Review `refined-plan.md`, including Architecture fit and links to relevant completed lessons for refresh → move to `refined/` → `implementing/` when you accept and coding starts.
 4. Use **Pair** against the active plan. When finished, run **Finalize** → `done/<year>/`.
 
 ## Light path
@@ -32,5 +32,7 @@ Trivial fixes need no plan—just commit.
 Preserve `rough-plan.md` through the lifecycle when it exists. `refined-plan.md` is authoritative for full-path work; `work-notes.md` for light-path work.
 
 Every full refined plan's learning map names relevant completed lessons, or explicitly says `None`. A lesson counts as completed only when you confirm it or a teaching record says so.
+
+Every full refined plan also records the simplest architecture fit for known requirements. `No architectural change` is valid; speculative future-proofing is not the goal.
 
 You move plans between folders. Agents may remind you; only Finalize relocates after your explicit approval (to `done/` or `cancelled/`).
