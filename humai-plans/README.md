@@ -1,4 +1,4 @@
-# plans/
+# humai-plans/
 
 Plan location is the authoritative status. Do not maintain a separate dashboard.
 
@@ -7,16 +7,15 @@ Plan location is the authoritative status. Do not maintain a separate dashboard.
 | `drafts/` | Rough ideas being formed | Many |
 | `grilling/` | Actively being grilled | At most one |
 | `refined/` | Grilling done; awaiting human review | At most one |
-| `approved/` | Human accepted; coding not started | At most one |
-| `implementing/` | Active implementation (Pair’s focus) | At most one |
+| `implementing/` | Accepted and in active implementation (Pair’s focus) | At most one |
 | `done/<year>/` | Completed and verified | Many |
 | `cancelled/<year>/` | Deliberately abandoned | Many |
 
 ## Full path
 
-1. Copy `plans/_templates/rough-plan.md` into `drafts/<slug>/rough-plan.md` and write it yourself.
+1. Copy `humai-plans/_templates/rough-plan.md` into `drafts/<slug>/rough-plan.md` and write it yourself.
 2. Move `drafts/<slug>` → `grilling/<slug>` and run **Planner** + `grill-with-docs`.
-3. Review `refined-plan.md` → move to `refined/` → `approved/` → `implementing/` when coding starts.
+3. Review `refined-plan.md` → move to `refined/` → `implementing/` when you accept and coding starts.
 4. Use **Pair** against the active plan. When finished, run **Finalize** → `done/<year>/`.
 
 ## Light path

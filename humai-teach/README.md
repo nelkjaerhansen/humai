@@ -1,13 +1,13 @@
-# teach/
+# humai-teach/
 
-Craft learning workspaces for this project. Each `teach/<subject>/` directory is a full **teach-skill** workspace (one mission per workspace).
+Craft learning workspaces for this project. Each `humai-teach/<subject>/` directory is a full **teach-skill** workspace (one mission per workspace).
 
 ## Invocation rule
 
 Always enter the subject before running the teach skill:
 
 ```bash
-cd teach/<subject>
+cd humai-teach/<subject>
 ```
 
 Then invoke the teach skill from OpenCode (for example `/teach` or load the `teach` skill).
@@ -22,7 +22,7 @@ Use broad craft buckets (`c-language`, `raylib`, `game-architecture`, …). Miss
 
 - **Planner** scaffolds thin subject shells during grilling when a plan needs them (`MISSION.md`, empty `lessons/` / `learning-records/`, etc.)—not full courses.
 - **You** run formal teach sessions inside a subject when you want lessons, glossary entries, or learning-records.
-- **Pair** may teach in-flight while coding; it never writes under `teach/`.
+- **Pair** may teach in-flight while coding; it never writes under `humai-teach/`.
 - **Finalize** may recommend lessons or records; it appends a learning-record only if you explicitly confirm.
 
 ## Proof of level
@@ -32,6 +32,6 @@ Use broad craft buckets (`c-language`, `raylib`, `game-architecture`, …). Miss
 ## Glossaries
 
 - `CONTEXT.md` (repo root) = this **product’s** language
-- `teach/<subject>/GLOSSARY.md` = **general craft** terms for that subject
+- `humai-teach/<subject>/GLOSSARY.md` = **general craft** terms for that subject
 
 Do not copy teach glossaries into `CONTEXT.md`.

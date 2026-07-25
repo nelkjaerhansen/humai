@@ -3,7 +3,7 @@
 **Status:** Revised workflow, version 3  
 **Primary objective:** Keep the developer in control of implementation while using AI for completion, planning clarification, contextual discussion, and teaching—calibrated to the developer’s documented level of understanding.
 
-**Changes from v2:** Integrates a committed `teach/` tree (Matt Pocock’s teach skill) as soft tutor context. Learning is never a hard gate on implementation. Planner curates a per-plan learning map; Pair dials teaching intensity from that map and `learning-records/`; Finalize may recommend lessons or records when gaps appear.
+**Changes from v2:** Integrates a committed `humai-teach/` tree (Matt Pocock’s teach skill) as soft tutor context. Learning is never a hard gate on implementation. Planner curates a per-plan learning map; Pair dials teaching intensity from that map and `learning-records/`; Finalize may recommend lessons or records when gaps appear.
 
 ---
 
@@ -16,14 +16,14 @@ The development loop is:
 ```text
 rough-plan.md
 → grilling session (Planner)
-  (may scaffold teach/<subject>/ shells + learning map in refined-plan)
+  (may scaffold humai-teach/<subject>/ shells + learning map in refined-plan)
 → refined-plan.md
 → human-led implementation with an AI pair programmer
-  (optional formal teach sessions in teach/<subject>/)
+  (optional formal teach sessions in humai-teach/<subject>/)
 → Finalize (outcome + archive; may recommend lessons / learning-records)
 ```
 
-A lighter path exists for small work: drop `work-notes.md` directly into `plans/implementing/` and use the same Pair agent. Light path may include a tiny optional learning blurb; Planner does not scaffold `teach/` unless the work is later promoted to a full plan. Finalize may still flag knowledge gaps.
+A lighter path exists for small work: drop `work-notes.md` directly into `humai-plans/implementing/` and use the same Pair agent. Light path may include a tiny optional learning blurb; Planner does not scaffold `humai-teach/` unless the work is later promoted to a full plan. Finalize may still flag knowledge gaps.
 
 ### Roles and hosts
 
@@ -31,8 +31,8 @@ A lighter path exists for small work: drop `work-notes.md` directly into `plans/
 |---|---|---|
 | **Autocomplete / inline assist** | Zed | Predicts or answers about code the developer is already writing |
 | **Planner** | OpenCode | Challenges a rough plan, resolves ambiguity, produces a refined plan; may update domain docs; scaffolds teach subject shells and writes the plan’s learning map |
-| **Pair programmer** | OpenCode | Reads project and current work, teaches, hints, redirects; calibrates depth from the plan’s learning map and linked learning-records; does not edit production code or `teach/` |
-| **Teach sessions** | OpenCode (teach skill) | Formal lessons, glossaries, and learning-records inside `teach/<subject>/` (developer invokes after `cd` into that subject) |
+| **Pair programmer** | OpenCode | Reads project and current work, teaches, hints, redirects; calibrates depth from the plan’s learning map and linked learning-records; does not edit production code or `humai-teach/` |
+| **Teach sessions** | OpenCode (teach skill) | Formal lessons, glossaries, and learning-records inside `humai-teach/<subject>/` (developer invokes after `cd` into that subject) |
 | **Finalize** | OpenCode | Verifies completion with the developer, records outcome, archives the plan; may recommend lessons/learning-records; may append a learning-record only on explicit developer confirmation |
 | **Models** | ChatGPT subscription | Used from Zed and OpenCode |
 
@@ -42,11 +42,11 @@ Main sources of context:
 
 ```text
 AGENTS.md
-active plan under plans/implementing/
+active plan under humai-plans/implementing/
   (including its learning map, when present)
 CONTEXT.md
 relevant ADRs
-teach/<subject>/ via links in the active plan
+humai-teach/<subject>/ via links in the active plan
   (especially learning-records/)
 current code
 recent changes or Git diff
@@ -70,11 +70,10 @@ Ordinary Markdown plans—not a specification framework.
 - **Work notes** support a light path without grilling or templates.
 
 ```text
-plans/
+humai-plans/
 ├── drafts/
 ├── grilling/
 ├── refined/
-├── approved/
 ├── implementing/
 ├── done/
 └── cancelled/
@@ -88,17 +87,16 @@ Do not maintain a separate status dashboard.
 
 | Location | Meaning | Cardinality |
 |---|---|---|
-| `plans/drafts/` | Rough ideas being formed | Many allowed |
-| `plans/grilling/` | Actively being grilled | At most one |
-| `plans/refined/` | Grilling done; awaiting human review | At most one |
-| `plans/approved/` | Human accepted; coding not started | At most one |
-| `plans/implementing/` | Active implementation (Pair’s focus) | At most one |
-| `plans/done/` | Completed and verified | Many (organize by year) |
-| `plans/cancelled/` | Deliberately abandoned | Many (organize by year) |
+| `humai-plans/drafts/` | Rough ideas being formed | Many allowed |
+| `humai-plans/grilling/` | Actively being grilled | At most one |
+| `humai-plans/refined/` | Grilling done; awaiting human review | At most one |
+| `humai-plans/implementing/` | Accepted and in active implementation (Pair’s focus) | At most one |
+| `humai-plans/done/` | Completed and verified | Many (organize by year) |
+| `humai-plans/cancelled/` | Deliberately abandoned | Many (organize by year) |
 
 ### 2.3 Exactly one active implementation
 
-`plans/implementing/` contains no more than one plan directory.
+`humai-plans/implementing/` contains no more than one plan directory.
 
 Pair must behave as follows:
 
@@ -117,8 +115,7 @@ Mention **materially missing context** only—not every theoretically useful pie
 | `drafts` → `grilling` | Developer, when starting Planner |
 | Write `refined-plan.md` while in `grilling/` | Planner (docs only) |
 | `grilling` → `refined` | Developer, when grilling is done and review should be cold |
-| `refined` → `approved` | Developer, after accepting the plan |
-| `approved` → `implementing` | Developer, when coding starts |
+| `refined` → `implementing` | Developer, when accepting the plan and coding starts |
 | Create light work directly in `implementing/` | Developer (skips earlier stages) |
 | `implementing` → `done` / `cancelled` | Finalize, only after explicit developer approval |
 
@@ -126,7 +123,7 @@ Agents may remind the developer that a move is appropriate. They must not silent
 
 Mid-lifecycle moves are manual in v1. Deterministic scripts (`plan start`, `plan done`, …) may be added later if friction appears.
 
-**Learning is not a lifecycle gate.** Missing lessons or learning-records never block `approved` → `implementing`. They only change how aggressively Pair (and suggestions from Finalize) teach.
+**Learning is not a lifecycle gate.** Missing lessons or learning-records never block `refined` → `implementing`. They only change how aggressively Pair (and suggestions from Finalize) teach.
 
 ### 2.5 ADRs are exceptional
 
@@ -138,12 +135,12 @@ Create an Architecture Decision Record only when all are true:
 
 `CONTEXT.md` is a domain glossary, not an implementation plan. Normal implementation choices stay in the refined plan, work notes, or code.
 
-### 2.6 Teaching lives under `teach/` (soft tutor context)
+### 2.6 Teaching lives under `humai-teach/` (soft tutor context)
 
 Committed in the same project repository:
 
 ```text
-teach/
+humai-teach/
 ├── README.md                 # invocation rules (cd into subject before /teach)
 ├── c-language/               # example subject = full teach workspace
 │   ├── MISSION.md
@@ -160,12 +157,12 @@ teach/
 
 Rules:
 
-- Each `teach/<subject>/` is a **full teach-skill workspace** (one mission per workspace).
+- Each `humai-teach/<subject>/` is a **full teach-skill workspace** (one mission per workspace).
 - **Subject grain:** broad craft buckets (`c-language`, `raylib`, `game-architecture`). Missions and out-of-scope inside each keep focus on what *this project* needs next. Missions **may expand** as the project demands new skills in that craft. Split a new subject only when the craft clearly differs.
 - **Proof of level:** `learning-records/` are the durable signal (demonstrated understanding or stated prior knowledge—not mere lesson coverage).
 - **No global teach dashboard.** The per-plan learning map in `refined-plan.md` (or a light blurb in `work-notes.md`) is the handoff artifact. Subject folders accumulate curriculum over time.
-- **Invocation:** always `cd teach/<subject>` (or open that folder as the workspace) before running the teach skill. Running teach from the repo root will mistreat the project root as the teaching workspace.
-- **`CONTEXT.md` vs teach glossaries:** strict split. `CONTEXT.md` = *this product’s* language (entities, rules, mechanics). `teach/<subject>/GLOSSARY.md` (and reference docs) = *general craft* (language, library, patterns). Do not copy teach glossaries into `CONTEXT.md`. Rarely promote a term into `CONTEXT.md` only when it has become project domain language.
+- **Invocation:** always `cd humai-teach/<subject>` (or open that folder as the workspace) before running the teach skill. Running teach from the repo root will mistreat the project root as the teaching workspace.
+- **`CONTEXT.md` vs teach glossaries:** strict split. `CONTEXT.md` = *this product’s* language (entities, rules, mechanics). `humai-teach/<subject>/GLOSSARY.md` (and reference docs) = *general craft* (language, library, patterns). Do not copy teach glossaries into `CONTEXT.md`. Rarely promote a term into `CONTEXT.md` only when it has become project domain language.
 
 ---
 
@@ -176,7 +173,7 @@ Rules:
 ├── AGENTS.md
 ├── CONTEXT.md
 │
-├── plans/
+├── humai-plans/
 │   ├── README.md
 │   ├── _templates/
 │   │   ├── rough-plan.md
@@ -185,19 +182,19 @@ Rules:
 │   ├── drafts/
 │   ├── grilling/
 │   ├── refined/
-│   ├── approved/
 │   ├── implementing/
 │   ├── done/
 │   │   └── 2026/
 │   └── cancelled/
 │       └── 2026/
 │
-├── teach/
+├── humai-teach/
 │   ├── README.md
 │   └── <subject>/            # teach-skill workspaces (committed)
 │
-├── docs/
-│   └── adr/
+├── humai-docs/
+│   ├── adr/
+│   └── revised-workflow-plan-v3.md
 │
 └── .opencode/                    # or equivalent OpenCode config locations
     ├── agents/
@@ -207,7 +204,7 @@ Rules:
     └── (commands / prompts as needed)
 ```
 
-Skills such as `grill-with-docs` and `teach` live where OpenCode discovers them (for example `.agents/skills/` or Claude-compatible skill paths). The teach skill may be installed globally; subject state still lives in this repo under `teach/<subject>/`.
+Skills such as `grill-with-docs` and `teach` live where OpenCode discovers them (for example `.agents/skills/` or Claude-compatible skill paths). The teach skill may be installed globally; subject state still lives in this repo under `humai-teach/<subject>/`.
 
 Preserve `rough-plan.md` through the lifecycle when it exists. `refined-plan.md` is authoritative for full-path work; `work-notes.md` is authoritative for light-path work.
 
@@ -217,7 +214,7 @@ Preserve `rough-plan.md` through the lifecycle when it exists. `refined-plan.md`
 
 ### 4.1 Rough plan (short)
 
-Save as `plans/_templates/rough-plan.md`.
+Save as `humai-plans/_templates/rough-plan.md`.
 
 ```markdown
 ---
@@ -261,7 +258,7 @@ Keep it short. Omit long “affected areas” checklists unless already known. U
 
 ### 4.2 Refined plan (layered)
 
-Save as `plans/_templates/refined-plan.md`.
+Save as `humai-plans/_templates/refined-plan.md`.
 
 A human should be able to re-read the **must-read** block in about five minutes. Prefer links to code, `CONTEXT.md`, and ADRs over pasted explanations.
 
@@ -361,7 +358,7 @@ Enough for Pair to dial down immediately even before records exist.
 
 ### Subjects
 
-Links to `teach/<subject>/` workspaces relevant to this plan.
+Links to `humai-teach/<subject>/` workspaces relevant to this plan.
 
 ### Relevant learning-records
 
@@ -404,7 +401,7 @@ Implementation slices should be small, observable vertical results—not layers 
 
 ### 4.3 Light path: `work-notes.md`
 
-No template required. Create a slug under `plans/implementing/` and add a freeform `work-notes.md`.
+No template required. Create a slug under `humai-plans/implementing/` and add a freeform `work-notes.md`.
 
 Suggested shape (optional, not enforced):
 
@@ -446,7 +443,7 @@ If a light change reveals a real knowledge gap, either learn in-flight with Pair
 
 ## 5. Phase 1: planning (developer)
 
-1. Create a directory under `plans/drafts/`.
+1. Create a directory under `humai-plans/drafts/`.
 2. Copy the rough-plan template (or write a short rough plan).
 3. Write the rough plan yourself—including learning focus when relevant.
 4. Include uncertainty rather than hiding it.
@@ -462,7 +459,7 @@ Do not create a refined plan in this phase. AI autocomplete may help with wordin
 
 Planner is a primary OpenCode agent with:
 
-- Permission to edit documentation paths: `plans/**`, `CONTEXT.md`, `docs/adr/**`, **`teach/**`**
+- Permission to edit documentation paths: `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, **`humai-teach/**`**
 - Production code edits denied
 - A short role prompt that defers shared workflow rules to `AGENTS.md`
 - Instruction to load the **`grill-with-docs`** skill for codebase-related feature grilling
@@ -472,7 +469,7 @@ Do not paste a long planning-only preamble into every chat. The Planner agent pr
 
 ### 6.2 Starting grilling
 
-1. Move the plan: `plans/drafts/<slug>` → `plans/grilling/<slug>`
+1. Move the plan: `humai-plans/drafts/<slug>` → `humai-plans/grilling/<slug>`
 2. Switch to the Planner agent in OpenCode
 3. Point it at the rough plan and begin grilling (one question at a time via the skill)
 
@@ -489,7 +486,7 @@ Planner:
 - **Learning (soft tutor prep):**
   - Spots subjects the plan touches where the developer may lack coverage
   - Offers a short prior-knowledge check for flagged subjects; on the developer’s say-so, may write prior-knowledge `learning-records/` and/or record familiarity in the learning map
-  - Scaffolds missing **subject shells** under `teach/<subject>/` (at least a project-grounded `MISSION.md`, and empty `lessons/` / `learning-records/` as needed)—not full HTML lesson courses
+  - Scaffolds missing **subject shells** under `humai-teach/<subject>/` (at least a project-grounded `MISSION.md`, and empty `lessons/` / `learning-records/` as needed)—not full HTML lesson courses
   - Writes the structured **Learning map** into `refined-plan.md` with concrete links (subjects, relevant records, suggested lessons/topics)
   - Does not treat missing lessons as blocking questions
 
@@ -500,9 +497,8 @@ When grilling is complete, Planner writes or updates `refined-plan.md` in the sa
 1. Developer reviews `refined-plan.md` (including the learning map)
 2. Ensure no blocking questions remain (learning gaps are not blocking)
 3. Move: `grilling` → `refined`
-4. After acceptance: `refined` → `approved`
-5. When coding actually starts: `approved` → `implementing`
-6. Optionally, before or between slices: `cd teach/<subject>` and run the teach skill for suggested topics
+4. When accepting and coding starts: `refined` → `implementing`
+5. Optionally, before or between slices: `cd humai-teach/<subject>` and run the teach skill for suggested topics
 
 ---
 
@@ -510,7 +506,7 @@ When grilling is complete, Planner writes or updates `refined-plan.md` in the sa
 
 ### 7.1 Activating work
 
-**Full path:** move `approved/<slug>` → `implementing/<slug>`, create or switch to the branch, open OpenCode on **Pair**, run a thin start command or prompt that rehydrates from `refined-plan.md` (including the learning map).
+**Full path:** move `refined/<slug>` → `implementing/<slug>`, create or switch to the branch, open OpenCode on **Pair**, run a thin start command or prompt that rehydrates from `refined-plan.md` (including the learning map).
 
 **Light path:** create `implementing/<slug>/work-notes.md` directly, then start Pair the same way.
 
@@ -534,7 +530,7 @@ The developer decides when interaction is useful. Pair is not a continuous comme
 | Tab / edit prediction | Zed | Reducing typing |
 | Inline assist | Zed | Tiny local questions about selected code |
 | Pair session | OpenCode | Plan-aware discussion, trade-offs, teaching, checkpoints |
-| Teach session | OpenCode + teach skill | Formal lessons / glossary / learning-records in `teach/<subject>/` |
+| Teach session | OpenCode + teach skill | Formal lessons / glossary / learning-records in `humai-teach/<subject>/` |
 
 Keep one Pair session for a coherent slice. Start a fresh one when changing slices, features, or when old discussion contaminates context.
 
@@ -550,7 +546,7 @@ Zed completions the developer accepts are still developer-driven.
 
 Two learning paths:
 
-1. **Formal:** `cd teach/<subject>/`, run the teach skill → lessons, glossary, learning-records.
+1. **Formal:** `cd humai-teach/<subject>/`, run the teach skill → lessons, glossary, learning-records.
 2. **In-flight:** Pair teaches/hints while implementing.
 
 **Heuristic:** prefer a formal teach session when Pair’s checkpoint suggestion points at a lesson, **or** the same confusion appears twice. Otherwise Pair-in-flight is enough. Never required before coding.
@@ -561,14 +557,14 @@ Two learning paths:
 
 ### 8.1 Pair
 
-**Permissions:** read/search allowed (including `teach/**`); edit denied; destructive/terminal writes denied by default.
+**Permissions:** read/search allowed (including `humai-teach/**`); edit denied; destructive/terminal writes denied by default.
 
 **Prompt focus (role-only):**
 
 - Follow `AGENTS.md`
-- Resolve active plan from `plans/implementing/` only
+- Resolve active plan from `humai-plans/implementing/` only
 - Support both `refined-plan.md` and `work-notes.md`
-- **Learning calibration:** treat the plan’s learning map (or light Learning blurb) as authoritative for this feature; follow its links into `teach/` (especially `learning-records/`). Do not independently rescan all of `teach/` unless the map is missing and learning focus is clearly material
+- **Learning calibration:** treat the plan’s learning map (or light Learning blurb) as authoritative for this feature; follow its links into `humai-teach/` (especially `learning-records/`). Do not independently rescan all of `humai-teach/` unless the map is missing and learning focus is clearly material
 - Default: at most four short sentences
 - Prefer one useful question or hint over a complete solution
 - If the approach is sound: confirm briefly and stop
@@ -578,7 +574,7 @@ Two learning paths:
 - Do not provide full implementations unless explicitly asked (e.g. show-code)
 - Distinguish repository facts from assumptions
 - Mention missing context only when material
-- Never write under `teach/**`
+- Never write under `humai-teach/**`
 
 **Thin commands** (optional, OpenCode prompts/commands):
 
@@ -594,13 +590,13 @@ Use `check` at semantic checkpoints (after choosing an approach, finishing a sli
 
 ### 8.2 Planner
 
-**Permissions:** allow edits under `plans/**`, `CONTEXT.md`, `docs/adr/**`, **`teach/**`**; deny production code edits.
+**Permissions:** allow edits under `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, **`humai-teach/**`**; deny production code edits.
 
 **Prompt focus:** planning-only role, docs hygiene, load `grill-with-docs` for feature work, follow `AGENTS.md`, build learning map + subject shells as in §6.3—not full course authorship during grilling.
 
 ### 8.3 Finalize
 
-**Permissions:** docs allowlist similar to Planner for plans / `CONTEXT.md` / ADRs; **`teach/**` only to append a learning-record when the developer explicitly confirms** something non-obvious stuck (or prior knowledge should be recorded). Recommendations may also be written into the plan Outcome.
+**Permissions:** docs allowlist similar to Planner for plans / `CONTEXT.md` / ADRs; **`humai-teach/**` only to append a learning-record when the developer explicitly confirms** something non-obvious stuck (or prior knowledge should be recorded). Recommendations may also be written into the plan Outcome.
 
 **Behaviour:**
 
@@ -609,7 +605,7 @@ Use `check` at semantic checkpoints (after choosing an approach, finishing a sli
 3. Help complete Outcome (full) or a short done note (light)
 4. Offer ADR only if criteria met
 5. **Learning follow-ups:** may recommend lessons and/or learning-records when knowledge gaps showed up (full path or light path)—suggestions only, not a gate
-6. On explicit approval: move to `plans/done/<year>/` (or `cancelled/`)
+6. On explicit approval: move to `humai-plans/done/<year>/` (or `cancelled/`)
 7. Summarize what changed
 
 Finalize closes the loop. It is not a second `check`. Mid-work concern spotting stays with Pair’s `check`.
@@ -624,11 +620,11 @@ Trivial no-plan commits do not use Finalize.
 
 | Concern | Location |
 |---|---|
-| Shared workflow law (folders, cardinality, plan kinds, ADR criteria, CONTEXT.md rules, teach/ rules, sources of truth) | **`AGENTS.md` only** |
+| Shared workflow law (folders, cardinality, plan kinds, ADR criteria, CONTEXT.md rules, humai-teach/ rules, sources of truth) | **`AGENTS.md` only** |
 | Pair / Planner / Finalize personality and tool boundaries | **OpenCode agent prompts** (short; “follow AGENTS.md”) |
 | One-shot verbs | Thin OpenCode commands that do not restate lifecycle rules |
 | Grilling interview loop | **`grill-with-docs` skill** (loaded on demand) |
-| Formal lessons in a subject workspace | **`teach` skill** (run only with cwd = `teach/<subject>/`) |
+| Formal lessons in a subject workspace | **`teach` skill** (run only with cwd = `humai-teach/<subject>/`) |
 
 Do not triple-copy the same paragraphs across `AGENTS.md`, agent prompts, and commands.
 
@@ -644,18 +640,18 @@ calibrated to documented learning level.
 
 ## Sources of truth (conflict order)
 1. Executable code and tests
-2. Active plan under plans/implementing/
+2. Active plan under humai-plans/implementing/
    (including learning map when present)
-3. Accepted ADRs under docs/adr/
+3. Accepted ADRs under humai-docs/adr/
 4. CONTEXT.md domain terminology (project language only)
-5. teach/<subject>/ via plan links (learning-records, glossary, lessons)
+5. humai-teach/<subject>/ via plan links (learning-records, glossary, lessons)
 6. Original rough plan (if present)
 7. Current chat history (never durable state)
 
 ## Plan lifecycle
-(drafts → grilling → refined → approved → implementing → done/cancelled)
+(drafts → grilling → refined → implementing → done/cancelled)
 Directory location is authoritative.
-At most one plan in grilling, refined, approved, and implementing.
+At most one plan in grilling, refined, and implementing.
 implementing accepts refined-plan.md (full) or work-notes.md (light).
 Learning gaps never block plan moves.
 
@@ -663,17 +659,17 @@ Learning gaps never block plan moves.
 (inspect implementing/; require exactly one; read refined-plan or work-notes;
  use learning map / Learning blurb for Pair intensity)
 
-## teach/
+## humai-teach/
 Committed subject workspaces. Broad craft subjects; expanding missions OK.
-cd teach/<subject> before running the teach skill.
+cd humai-teach/<subject> before running the teach skill.
 learning-records/ = durable proficiency signal.
 Planner may scaffold shells + write records (prior knowledge) and plan learning maps.
-Pair: read-only on teach/.
+Pair: read-only on humai-teach/.
 Finalize: may recommend; may append a record only on explicit confirmation.
 
 ## CONTEXT.md
 Domain glossary only (this product). No feature plans, implementation dumps,
-or general C/raylib textbooks (those belong under teach/).
+or general C/raylib textbooks (those belong under humai-teach/).
 
 ## ADRs
 Only when hard to reverse, surprising without context, and a real trade-off.
@@ -699,9 +695,9 @@ When the developer believes work is finished:
 5. Complete Outcome / done note
 6. Decide ADR warrant
 7. Optionally capture learning follow-ups (recommended lessons/records; append a record only if the developer confirms)
-8. Approve archive → `plans/done/<year>/<slug>`
+8. Approve archive → `humai-plans/done/<year>/<slug>`
 
-Cancelled plans get a short cancellation note, then move to `plans/cancelled/<year>/<slug>`. Do not delete cancelled plans automatically.
+Cancelled plans get a short cancellation note, then move to `humai-plans/cancelled/<year>/<slug>`. Do not delete cancelled plans automatically.
 
 Routine checklist items (tests, moves, outcome prompts) should be driven by Finalize over time; v1 still expects the developer to run tests and approve the move.
 
@@ -713,8 +709,8 @@ Routine checklist items (tests, moves, outcome prompts) should be driven by Fina
 |---|---|
 | Project-wide AI behavior | `AGENTS.md` |
 | Domain vocabulary (this product) | `CONTEXT.md` |
-| Craft vocabulary / lessons / level proof | `teach/<subject>/` |
-| Lasting architecture decisions | `docs/adr/` |
+| Craft vocabulary / lessons / level proof | `humai-teach/<subject>/` |
+| Lasting architecture decisions | `humai-docs/adr/` |
 | Initial feature thinking | `rough-plan.md` |
 | Agreed full implementation + learning map | `refined-plan.md` |
 | Light active work | `work-notes.md` |
@@ -726,9 +722,9 @@ A new Pair session reconstructs context from:
 
 ```text
 AGENTS.md
-→ plans/implementing/
+→ humai-plans/implementing/
 → refined-plan.md or work-notes.md
-→ learning map / Learning blurb → follow teach/ links
+→ learning map / Learning blurb → follow humai-teach/ links
 → CONTEXT.md
 → relevant ADRs
 → code
@@ -753,7 +749,7 @@ Read-only, active-plan aware, short by default, one issue at a time, teach befor
 
 ### 12.4 Do not let `CONTEXT.md` become a dump
 
-Growing glossary noise is a warning sign. Feature behaviour belongs in plans; rationale in ADRs; general craft learning belongs under `teach/`.
+Growing glossary noise is a warning sign. Feature behaviour belongs in plans; rationale in ADRs; general craft learning belongs under `humai-teach/`.
 
 ### 12.5 Completion can still remove you from the loop
 
@@ -765,7 +761,7 @@ Introduce deterministic scripts only after real repetitive friction.
 
 ### 12.7 Do not run the teach skill from the repo root
 
-Always `cd teach/<subject>` first. Document this in `teach/README.md`.
+Always `cd humai-teach/<subject>` first. Document this in `humai-teach/README.md`.
 
 ### 12.8 Do not turn learning into a gate
 
@@ -803,20 +799,20 @@ After the trial, change only parts that caused measurable friction.
 
 ### Repository
 
-- [ ] Add `AGENTS.md` (shared law only, including teach/ rules)
+- [ ] Add `AGENTS.md` (shared law only, including humai-teach/ rules)
 - [ ] Add `CONTEXT.md`
-- [ ] Add `plans/` with the seven lifecycle directories
+- [ ] Add `humai-plans/` with the six lifecycle directories
 - [ ] Add rough and refined templates (including Learning map on refined)
-- [ ] Add `docs/adr/`
+- [ ] Add `humai-docs/adr/`
 - [ ] Document light-path `work-notes.md` convention
-- [ ] Add `teach/README.md` (cd-into-subject rule)
-- [ ] Allow empty `teach/` until Planner scaffolds the first subject
+- [ ] Add `humai-teach/README.md` (cd-into-subject rule)
+- [ ] Allow empty `humai-teach/` until Planner scaffolds the first subject
 
 ### OpenCode
 
 - [ ] Configure ChatGPT / OpenAI models via subscription or provider settings
 - [ ] Create **Pair** agent (edit denied; teaching-oriented prompt; read teach via plan links)
-- [ ] Create **Planner** agent (docs allowlist including `teach/**`; load `grill-with-docs`)
+- [ ] Create **Planner** agent (docs allowlist including `humai-teach/**`; load `grill-with-docs`)
 - [ ] Create **Finalize** agent/command (learning follow-ups; record append only on confirm)
 - [ ] Add thin commands: pair-start, nudge, check, deep, show-code
 - [ ] Install `grill-with-docs` (and optionally `grill-me`) where OpenCode can load skills
@@ -832,9 +828,9 @@ After the trial, change only parts that caused measurable friction.
 
 - [ ] Write `rough-plan.md` in `drafts/` (optional Learning focus)
 - [ ] Move to `grilling/`; run Planner + `grill-with-docs`
-- [ ] Review learning map + any new `teach/<subject>/` shells
-- [ ] Produce and approve `refined-plan.md` through `refined/` → `approved/`
-- [ ] Move to `implementing/`; Pair with pair-start
+- [ ] Review learning map + any new `humai-teach/<subject>/` shells
+- [ ] Produce and review `refined-plan.md` through `refined/`
+- [ ] Move to `implementing/` when accepted; Pair with pair-start
 - [ ] Optionally take suggested teach lessons; or learn in-flight
 - [ ] Implement with Zed completion + deliberate Pair checkpoints
 - [ ] Finalize → `done/` (optional learning follow-ups)
@@ -851,13 +847,13 @@ After the trial, change only parts that caused measurable friction.
 
 ```text
 YOU
-write plans/drafts/<feature>/rough-plan.md
+write humai-plans/drafts/<feature>/rough-plan.md
 (optional learning focus / familiarity)
 
         ↓
 
 YOU
-move to plans/grilling/
+move to humai-plans/grilling/
 
         ↓
 
@@ -867,15 +863,15 @@ inspect the codebase
 resolve terminology
 identify edge cases
 spot learning subjects; prior-knowledge check
-scaffold teach/<subject>/ shells when needed
+scaffold humai-teach/<subject>/ shells when needed
 write refined-plan.md (including Learning map)
 optionally update CONTEXT.md / ADR / learning-records
 
         ↓
 
 YOU
-review → refined/ → approved/ → implementing/
-(optional: cd teach/<subject> → teach skill)
+review → refined/ → implementing/
+(optional: cd humai-teach/<subject> → teach skill)
 
         ↓
 
@@ -898,13 +894,13 @@ formal teach when suggested or stuck twice
 OPENCODE FINALIZE
 outcome, verification notes, optional ADR
 optional learning follow-ups (lessons / records)
-on approval → plans/done/
+on approval → humai-plans/done/
 ```
 
 Light path:
 
 ```text
-YOU write plans/implementing/<slug>/work-notes.md
+YOU write humai-plans/implementing/<slug>/work-notes.md
   (optional Learning blurb)
 → OPENCODE PAIR
 → YOU implement
@@ -917,4 +913,4 @@ Central principle:
 
 Teaching corollary:
 
-> `teach/` carries craft knowledge and proof of level. Plans carry the learning map for the current feature. Neither locks the developer out of implementation.
+> `humai-teach/` carries craft knowledge and proof of level. Plans carry the learning map for the current feature. Neither locks the developer out of implementation.

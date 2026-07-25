@@ -4,7 +4,7 @@
 
 You write the production code. OpenCode agents challenge plans, teach at your level, and help close work. Project files—not chat history—carry durable context.
 
-Design reference: [`revised-workflow-plan-v3.md`](./revised-workflow-plan-v3.md)  
+Design reference: [`humai-docs/revised-workflow-plan-v3.md`](./humai-docs/revised-workflow-plan-v3.md)  
 Agent rulebook: [`AGENTS.md`](./AGENTS.md)
 
 ---
@@ -13,10 +13,10 @@ Agent rulebook: [`AGENTS.md`](./AGENTS.md)
 
 | Piece | Role |
 |---|---|
-| `plans/` | Feature lifecycle by folder location |
+| `humai-plans/` | Feature lifecycle by folder location |
 | `CONTEXT.md` | Product domain glossary (stub) |
-| `teach/` | Craft learning workspaces (empty until Planner scaffolds subjects) |
-| `docs/adr/` | Architecture Decision Records when warranted |
+| `humai-teach/` | Craft learning workspaces (empty until Planner scaffolds subjects) |
+| `humai-docs/adr/` | Architecture Decision Records when warranted |
 | `.opencode/agents/` | **Pair**, **Planner**, **Finalize** |
 | `.opencode/commands/` | `/pair-start`, `/nudge`, `/check`, `/deep`, `/show-code` |
 | `.opencode/skills/` | Vendored `grill-with-docs`, `teach`, and dependencies |
@@ -49,7 +49,7 @@ Switch agents with Tab (or your `switch_agent` keybind): **Pair**, **Planner**, 
 ### 4. Optional first edits
 
 - Rename or fill the stub in [`CONTEXT.md`](./CONTEXT.md) when you have product terms
-- Skim [`plans/README.md`](./plans/README.md) and [`teach/README.md`](./teach/README.md)
+- Skim [`humai-plans/README.md`](./humai-plans/README.md) and [`humai-teach/README.md`](./humai-teach/README.md)
 
 ---
 
@@ -60,30 +60,30 @@ Agents do not move plan folders for you (except Finalize after you approve archi
 ### Full path
 
 ```text
-YOU          write plans/drafts/<slug>/rough-plan.md
-YOU          move → plans/grilling/<slug>
+YOU          write humai-plans/drafts/<slug>/rough-plan.md
+YOU          move → humai-plans/grilling/<slug>
 PLANNER      grill (grill-with-docs) → refined-plan.md (+ learning map)
-YOU          review → refined/ → approved/ → implementing/
-YOU          optionally: cd teach/<subject> → teach skill
+YOU          review → refined/ → implementing/
+YOU          optionally: cd humai-teach/<subject> → teach skill
 YOU + PAIR   implement (Zed completion + Pair checkpoints)
 YOU          run tests / verify
-FINALIZE     outcome → on your approval → plans/done/<year>/
+FINALIZE     outcome → on your approval → humai-plans/done/<year>/
 ```
 
 Numbered:
 
-1. Copy `plans/_templates/rough-plan.md` to `plans/drafts/<slug>/rough-plan.md` and write it (include learning focus if useful).
-2. Move that directory to `plans/grilling/<slug>`.
+1. Copy `humai-plans/_templates/rough-plan.md` to `humai-plans/drafts/<slug>/rough-plan.md` and write it (include learning focus if useful).
+2. Move that directory to `humai-plans/grilling/<slug>`.
 3. In OpenCode, switch to **Planner**. Point it at the rough plan and start grilling (`grill-with-docs` for codebase work).
-4. Review `refined-plan.md` (including the learning map and any new `teach/<subject>/` shells).
-5. Move `grilling/<slug>` → `refined/<slug>`, then → `approved/<slug>` when you accept, then → `implementing/<slug>` when coding starts.
+4. Review `refined-plan.md` (including the learning map and any new `humai-teach/<subject>/` shells).
+5. Move `grilling/<slug>` → `refined/<slug>`, then → `implementing/<slug>` when you accept and coding starts.
 6. Switch to **Pair**, run `/pair-start`, write code yourself. Use `/nudge`, `/check`, `/deep`, `/show-code` as needed.
-7. Optional formal learning: `cd teach/<subject>` then run the teach skill—never from the repo root.
-8. When done: run tests, optionally `/check`, switch to **Finalize**, complete Outcome, approve archive to `plans/done/<year>/`.
+7. Optional formal learning: `cd humai-teach/<subject>` then run the teach skill—never from the repo root.
+8. When done: run tests, optionally `/check`, switch to **Finalize**, complete Outcome, approve archive to `humai-plans/done/<year>/`.
 
 ### Light path
 
-1. Create `plans/implementing/<slug>/work-notes.md` (freeform; optional Learning blurb).
+1. Create `humai-plans/implementing/<slug>/work-notes.md` (freeform; optional Learning blurb).
 2. **Pair** → you implement.
 3. **Finalize** if useful (may recommend learning follow-ups).
 
@@ -95,9 +95,9 @@ Trivial fixes (typo, lint, obvious one-liner): no plan—just commit.
 
 | Agent | You use it for | Edits |
 |---|---|---|
-| **Planner** | Grill rough plans; produce refined plans + learning maps | `plans/**`, `CONTEXT.md`, `docs/adr/**`, `teach/**` |
+| **Planner** | Grill rough plans; produce refined plans + learning maps | `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, `humai-teach/**` |
 | **Pair** | Plan-aware hints, teaching, checkpoints while you code | Nothing (read-only) |
-| **Finalize** | Outcome, verification notes, archive on approval | Docs allowlist; `teach/` only to append a confirmed learning-record |
+| **Finalize** | Outcome, verification notes, archive on approval | Docs allowlist; `humai-teach/` only to append a confirmed learning-record |
 
 Thin Pair commands: `/pair-start`, `/nudge`, `/check`, `/deep`, `/show-code`.
 
@@ -105,7 +105,7 @@ Thin Pair commands: `/pair-start`, `/nudge`, `/check`, `/deep`, `/show-code`.
 
 ## Learning (soft, never a gate)
 
-- Missing lessons never block `approved` → `implementing`.
+- Missing lessons never block `refined` → `implementing`.
 - Planner may scaffold empty subject shells; you fill them via teach sessions when you want.
 - Pair dials teaching from the plan’s learning map and `learning-records/`.
 - Prefer a formal teach session when Pair suggests a lesson or you get stuck twice on the same confusion; otherwise learn in-flight with Pair.
@@ -120,10 +120,11 @@ Thin Pair commands: `/pair-start`, `/nudge`, `/check`, `/deep`, `/show-code`.
 ├── AGENTS.md                 ← shared agent law
 ├── CONTEXT.md                ← product glossary stub
 ├── opencode.jsonc
-├── revised-workflow-plan-v3.md
-├── plans/
-├── teach/
-├── docs/adr/
+├── humai-plans/
+├── humai-teach/
+├── humai-docs/
+│   ├── adr/
+│   └── revised-workflow-plan-v3.md
 └── .opencode/
     ├── agents/               pair | planner | finalize
     ├── commands/             pair-start | nudge | check | deep | show-code
@@ -140,8 +141,8 @@ Use Zed for writing and completion; keep OpenCode in a terminal pane or Desktop 
 
 ## Further reading
 
-- [`plans/README.md`](./plans/README.md) — folder status and templates  
-- [`teach/README.md`](./teach/README.md) — subject workspaces and teach invocation  
-- [`docs/adr/README.md`](./docs/adr/README.md) — when to write an ADR  
-- [`revised-workflow-plan-v3.md`](./revised-workflow-plan-v3.md) — full workflow design  
+- [`humai-plans/README.md`](./humai-plans/README.md) — folder status and templates  
+- [`humai-teach/README.md`](./humai-teach/README.md) — subject workspaces and teach invocation  
+- [`humai-docs/adr/README.md`](./humai-docs/adr/README.md) — when to write an ADR  
+- [`humai-docs/revised-workflow-plan-v3.md`](./humai-docs/revised-workflow-plan-v3.md) — full workflow design  
 - [`AGENTS.md`](./AGENTS.md) — rules agents must follow  

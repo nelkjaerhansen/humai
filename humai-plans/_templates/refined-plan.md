@@ -93,7 +93,7 @@ Enough for Pair to dial down immediately even before records exist.
 
 ### Subjects
 
-Links to `teach/<subject>/` workspaces relevant to this plan.
+Links to `humai-teach/<subject>/` workspaces relevant to this plan.
 
 ### Relevant learning-records
 

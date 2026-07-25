@@ -2,7 +2,7 @@
 
 Domain glossary for this product. Add terms as they become stable during planning and implementation.
 
-Keep this file free of feature plans, implementation dumps, and general craft knowledge (C, libraries, patterns belong under `teach/`).
+Keep this file free of feature plans, implementation dumps, and general craft knowledge (C, libraries, patterns belong under `humai-teach/`).
 
 ## Language
 

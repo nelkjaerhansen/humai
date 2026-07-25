@@ -9,22 +9,22 @@ calibrated to documented learning level.
 ## Sources of truth (conflict order)
 
 1. Executable code and tests
-2. Active plan under `plans/implementing/` (including learning map when present)
-3. Accepted ADRs under `docs/adr/`
+2. Active plan under `humai-plans/implementing/` (including learning map when present)
+3. Accepted ADRs under `humai-docs/adr/`
 4. `CONTEXT.md` domain terminology (project language only)
-5. `teach/<subject>/` via plan links (learning-records, glossary, lessons)
+5. `humai-teach/<subject>/` via plan links (learning-records, glossary, lessons)
 6. Original rough plan (if present)
 7. Current chat history (never durable state)
 
 ## Plan lifecycle
 
-`drafts` → `grilling` → `refined` → `approved` → `implementing` → `done` / `cancelled`
+`drafts` → `grilling` → `refined` → `implementing` → `done` / `cancelled`
 
 Directory location is authoritative. Do not maintain a separate status dashboard.
 
 Cardinality:
 
-- At most one plan in each of: `grilling/`, `refined/`, `approved/`, `implementing/`
+- At most one plan in each of: `grilling/`, `refined/`, `implementing/`
 - Many allowed in `drafts/`, `done/`, `cancelled/`
 
 `implementing/` accepts `refined-plan.md` (full path) or `work-notes.md` (light path).
@@ -35,7 +35,7 @@ Agents may remind the developer that a folder move is appropriate. They must not
 
 ## Active-plan resolution
 
-Inspect `plans/implementing/` only:
+Inspect `humai-plans/implementing/` only:
 
 - Exactly one plan directory → use it
 - None → say so before plan-specific assumptions
@@ -45,21 +45,21 @@ Inspect `plans/implementing/` only:
 
 Use the plan’s **Learning map** (full) or **Learning** blurb (light) for Pair teaching intensity. Mention materially missing context only.
 
-## teach/
+## humai-teach/
 
-Committed subject workspaces under `teach/<subject>/`. Broad craft subjects; expanding missions OK.
+Committed subject workspaces under `humai-teach/<subject>/`. Broad craft subjects; expanding missions OK.
 
-Always `cd teach/<subject>` (or open that folder as the workspace) before running the teach skill. Never run teach from the repo root.
+Always `cd humai-teach/<subject>` (or open that folder as the workspace) before running the teach skill. Never run teach from the repo root.
 
 `learning-records/` = durable proficiency signal (not mere lesson coverage).
 
 - **Planner** may scaffold subject shells, write prior-knowledge records (on developer say-so), and author the plan learning map. Does not author full courses during grilling.
-- **Pair** is read-only on `teach/`.
+- **Pair** is read-only on `humai-teach/`.
 - **Finalize** may recommend lessons/records; may append a learning-record only on explicit developer confirmation.
 
 ## CONTEXT.md
 
-Domain glossary only (this product’s language). No feature plans, implementation dumps, or general craft textbooks (those belong under `teach/`).
+Domain glossary only (this product’s language). No feature plans, implementation dumps, or general craft textbooks (those belong under `humai-teach/`).
 
 ## ADRs
 
@@ -80,7 +80,7 @@ Trivial no-plan commits do not use Finalize.
 | Role | Edits production code | Edits docs / teach |
 |---|---|---|
 | Pair | No | No |
-| Planner | No | `plans/**`, `CONTEXT.md`, `docs/adr/**`, `teach/**` |
-| Finalize | No | Same docs allowlist; `teach/**` only to append a confirmed learning-record |
+| Planner | No | `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, `humai-teach/**` |
+| Finalize | No | Same docs allowlist; `humai-teach/**` only to append a confirmed learning-record |
 
 OpenCode **Build** (full-edit agent) is outside this workflow.
