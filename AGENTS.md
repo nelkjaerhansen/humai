@@ -1,10 +1,10 @@
-# Project agent instructions
+# Project workflow instructions
 
 ## Purpose
 
 Human-led AI workflow (**humai**). The developer owns production code.
 AI supports planning, understanding, completion, review, and teaching
-calibrated to documented learning level.
+calibrated to documented learning level via skills under `.agents/skills/`.
 
 ## Sources of truth (conflict order)
 
@@ -31,7 +31,7 @@ Cardinality:
 
 **Learning gaps never block plan moves.** Missing lessons or learning-records only change teaching intensity.
 
-Agents may remind the developer that a folder move is appropriate. They must not silently relocate plans. Finalize moves to `done/` or `cancelled/` only after explicit developer approval.
+Skills may remind the developer that a folder move is appropriate. They must not silently relocate plans. The **finalize** skill moves a plan from `implementing/` to `done/` or `cancelled/` only after explicit developer approval.
 
 ## Active-plan resolution
 
@@ -49,18 +49,18 @@ Use the plan’s **Learning map** (full) or **Learning** blurb (light) for Pair 
 
 Committed subject workspaces under `humai-teach/<subject>/`. Broad craft subjects; expanding missions OK.
 
-Always `cd humai-teach/<subject>` (or open that folder as the workspace) before running the teach skill. Never run teach from the repo root.
+Always `cd humai-teach/<subject>` (or open that folder as the workspace) before running the **teach** skill. Never run teach from the repo root.
 
 `learning-records/` = durable proficiency signal (not mere lesson coverage).
 An existing lesson file does not prove completion. Treat a lesson as completed only when the developer confirms it or a teaching record explicitly says so.
 
-- **Planner** may scaffold subject shells, write prior-knowledge records (on developer say-so), and author the plan learning map. For every full refined plan, inspect relevant subjects and link directly relevant completed lessons for refresh, or state `None`. Does not author full courses during grilling.
-- **Pair** is read-only on `humai-teach/`. It may use completed lessons linked by the plan as refresh material; completion does not replace learning-record evidence.
-- **Finalize** may recommend lessons/records; may append a learning-record only on explicit developer confirmation.
+- **planner** may scaffold subject shells, write prior-knowledge records (on developer say-so), and author the plan learning map. For every full refined plan, inspect relevant subjects and link directly relevant completed lessons for refresh, or state `None`. Does not author full courses during grilling.
+- **pair** is read-only on `humai-teach/`. It may use completed lessons linked by the plan as refresh material; completion does not replace learning-record evidence.
+- **finalize** may recommend lessons/records; may append a learning-record only on explicit developer confirmation.
 
 ## Architecture planning
 
-For every full refined plan, Planner performs a bounded architecture pass grounded in the current system:
+For every full refined plan, the **planner** skill performs a bounded architecture pass grounded in the current system:
 
 - Choose the simplest structure that supports known requirements.
 - Capture obvious, material wins in responsibilities, boundaries, data flow, or dependency direction.
@@ -87,12 +87,19 @@ Move to `done/` only when criteria/todos are checked, verification is done, devi
 
 Trivial no-plan commits do not use Finalize.
 
-## Role boundaries (summary)
+## Skills (cwd and edit bounds)
 
-| Role | Edits production code | Edits docs / teach |
-|---|---|---|
-| Pair | No | No |
-| Planner | No | `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, `humai-teach/**` |
-| Finalize | No | Same docs allowlist; `humai-teach/**` only to append a confirmed learning-record |
+Procedures live under `.agents/skills/`. Production code is developer-owned and outside these skills’ edit surfaces. Edit bounds are prompt discipline—review diffs.
 
-OpenCode **Build** (full-edit agent) is outside this workflow.
+| Skill | Invoke from | May edit | Must not edit |
+|---|---|---|---|
+| `pair` | repo root | nothing | production code, `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, `humai-teach/**` |
+| `pair-start`, `nudge`, `check`, `deep`, `show-code` | repo root | nothing (via `/pair`) | same as `pair` |
+| `planner` | repo root | `humai-plans/**`, `CONTEXT.md`, `humai-docs/adr/**`, `humai-teach/**` | production code |
+| `finalize` | repo root | docs allowlist; `humai-teach/**` only to append a confirmed learning-record; archive plan only on approval | production code |
+| `grill-me` / `grilling` | repo root | nothing until shared understanding | production code |
+| `grill-with-docs` | repo root | via `domain-modeling` | production code |
+| `domain-modeling` | repo root | `CONTEXT.md`, `humai-docs/adr/**` (mapped paths if any) | production code; feature plans |
+| `teach` | `humai-teach/<subject>/` only | that subject workspace | app code; other subjects; plans (default) |
+
+Composition: `grill-me` → `/grilling`; `grill-with-docs` → `/grilling` + `/domain-modeling`; thin pair verbs → `/pair`; `planner` loads `/grill-with-docs` (or `/grill-me` when no codebase test).

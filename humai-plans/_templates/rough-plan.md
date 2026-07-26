@@ -28,7 +28,7 @@ What am I unsure about?
 What do I want to learn or take slowly?
 Familiarity claims are welcome even if incomplete
 (e.g. "I know structs; I do not know pointers well").
-You may not know what you do not know—Planner will expand this.
+You may not know what you do not know—the planner skill will expand this.
 
 ## Questions for grilling
 

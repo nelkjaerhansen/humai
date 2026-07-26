@@ -14,13 +14,13 @@ Plan location is the authoritative status. Do not maintain a separate dashboard.
 ## Full path
 
 1. Copy `humai-plans/_templates/rough-plan.md` into `drafts/<slug>/rough-plan.md` and write it yourself.
-2. Move `drafts/<slug>` → `grilling/<slug>` and run **Planner** + `grill-with-docs`; Planner includes a bounded architecture-fit pass.
+2. Move `drafts/<slug>` → `grilling/<slug>` and run `/planner` (loads `grill-with-docs` for codebase work); planner includes a bounded architecture-fit pass.
 3. Review `refined-plan.md`, including Architecture fit and links to relevant completed lessons for refresh → move to `refined/` → `implementing/` when you accept and coding starts.
-4. Use **Pair** against the active plan. When finished, run **Finalize** → `done/<year>/`.
+4. Use `/pair` against the active plan. When finished, run `/finalize` → `done/<year>/`.
 
 ## Light path
 
-Create `implementing/<slug>/work-notes.md` directly (no template required). Use Pair. Finalize if useful.
+Create `implementing/<slug>/work-notes.md` directly (no template required). Use `/pair`. `/finalize` if useful.
 
 Trivial fixes need no plan—just commit.
 
@@ -35,4 +35,6 @@ Every full refined plan's learning map names relevant completed lessons, or expl
 
 Every full refined plan also records the simplest architecture fit for known requirements. `No architectural change` is valid; speculative future-proofing is not the goal.
 
-You move plans between folders. Agents may remind you; only Finalize relocates after your explicit approval (to `done/` or `cancelled/`).
+You move plans between folders. Skills may remind you; only **finalize** relocates after your explicit approval (to `done/` or `cancelled/`).
+
+Invoke **planner**, **pair**, and **finalize** from the **repository root**. See [`AGENTS.md`](../AGENTS.md) for edit bounds.

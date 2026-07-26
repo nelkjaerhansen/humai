@@ -91,7 +91,7 @@ List decisions that may warrant an ADR. Do not create one automatically.
 
 ## Learning map
 
-Planner-authored handoff for Pair. Keep short—no syllabus dump.
+Planner-authored handoff for Pair (`/planner` → `/pair`). Keep short—no syllabus dump.
 Not a gate; implementation may proceed regardless.
 
 ### Familiarity (optional)

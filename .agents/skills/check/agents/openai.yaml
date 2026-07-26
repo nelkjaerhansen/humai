@@ -1,0 +1,5 @@
+interface:
+  display_name: "Check"
+  short_description: "One consequential concern vs the active plan"
+policy:
+  allow_implicit_invocation: false

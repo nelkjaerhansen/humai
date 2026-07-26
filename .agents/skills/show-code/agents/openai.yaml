@@ -1,0 +1,5 @@
+interface:
+  display_name: "Show Code"
+  short_description: "Smallest useful code example; read-only"
+policy:
+  allow_implicit_invocation: false

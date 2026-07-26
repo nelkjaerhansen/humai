@@ -10,9 +10,11 @@ Always enter the subject before running the teach skill:
 cd humai-teach/<subject>
 ```
 
-Then invoke the teach skill from OpenCode (for example `/teach` or load the `teach` skill).
+Then invoke `/teach` (or load the `teach` skill).
 
 **Do not run the teach skill from the repository root.** That treats the project root as the teaching workspace and will create the wrong files.
+
+All other workflow skills (`/planner`, `/pair`, `/finalize`, grill skills) run from the **repository root**.
 
 ## Subject grain
 
@@ -20,10 +22,10 @@ Use broad craft buckets (`c-language`, `raylib`, `game-architecture`, …). Miss
 
 ## Who creates what
 
-- **Planner** scaffolds thin subject shells during grilling when a plan needs them (`MISSION.md`, empty `lessons/` / `learning-records/`, etc.)—not full courses. It also links relevant completed lessons from these workspaces in every full refined plan so they can be refreshed.
+- **planner** scaffolds thin subject shells during grilling when a plan needs them (`MISSION.md`, empty `lessons/` / `learning-records/`, etc.)—not full courses. It also links relevant completed lessons from these workspaces in every full refined plan so they can be refreshed.
 - **You** run formal teach sessions inside a subject when you want lessons, glossary entries, or learning-records.
-- **Pair** may teach in-flight while coding; it never writes under `humai-teach/`.
-- **Finalize** may recommend lessons or records; it appends a learning-record only if you explicitly confirm.
+- **pair** may teach in-flight while coding; it never writes under `humai-teach/`.
+- **finalize** may recommend lessons or records; it appends a learning-record only if you explicitly confirm.
 
 ## Proof of level
 

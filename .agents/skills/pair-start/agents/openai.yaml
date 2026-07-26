@@ -1,0 +1,5 @@
+interface:
+  display_name: "Pair Start"
+  short_description: "Rehydrate Pair from the active plan"
+policy:
+  allow_implicit_invocation: false

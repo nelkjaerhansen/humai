@@ -16,9 +16,10 @@ build/
 *.o
 *.a
 
-# OpenCode / editor local
-.opencode/node_modules/
+# Editor local
 .zed/
+.idea/
+.vscode/
 
 # Logs
 *.log
