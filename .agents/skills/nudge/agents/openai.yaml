@@ -1,5 +1,0 @@
-interface:
-  display_name: "Nudge"
-  short_description: "One Socratic hint; no code"
-policy:
-  allow_implicit_invocation: false

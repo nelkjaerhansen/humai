@@ -1,5 +1,0 @@
-interface:
-  display_name: "Planner"
-  short_description: "Grill and refine plans; docs and teach shells only"
-policy:
-  allow_implicit_invocation: false

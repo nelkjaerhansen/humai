@@ -1,5 +1,0 @@
-interface:
-  display_name: "Deep"
-  short_description: "Detailed Pair explanation; still read-only"
-policy:
-  allow_implicit_invocation: false

@@ -1,5 +1,0 @@
-interface:
-  display_name: "Finalize"
-  short_description: "Close work, outcome notes, archive on approval"
-policy:
-  allow_implicit_invocation: false

@@ -6,7 +6,6 @@ You write the production code. Skills challenge plans, teach at your level, and 
 
 The workflow is **IDE- and model-agnostic**: use whatever editor and agent can load project skills from `.agents/skills/`.
 
-Design reference: [`humai-docs/revised-workflow-plan-v3.md`](./humai-docs/revised-workflow-plan-v3.md)  
 Shared law: [`AGENTS.md`](./AGENTS.md)
 
 ---
@@ -118,8 +117,7 @@ Full cwd and edit table: [`AGENTS.md`](./AGENTS.md).
 ├── humai-plans/
 ├── humai-teach/
 ├── humai-docs/
-│   ├── adr/
-│   └── revised-workflow-plan-v3.md
+│   └── adr/
 └── .agents/
     └── skills/               pair | planner | finalize | teach | grill-* | …
 ```
@@ -131,5 +129,4 @@ Full cwd and edit table: [`AGENTS.md`](./AGENTS.md).
 - [`humai-plans/README.md`](./humai-plans/README.md) — folder status and templates  
 - [`humai-teach/README.md`](./humai-teach/README.md) — subject workspaces and teach invocation  
 - [`humai-docs/adr/README.md`](./humai-docs/adr/README.md) — when to write an ADR  
-- [`humai-docs/revised-workflow-plan-v3.md`](./humai-docs/revised-workflow-plan-v3.md) — full workflow design  
 - [`AGENTS.md`](./AGENTS.md) — rules skills must follow  

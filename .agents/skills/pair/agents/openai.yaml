@@ -1,5 +1,0 @@
-interface:
-  display_name: "Pair"
-  short_description: "Read-only pair programmer for the active plan"
-policy:
-  allow_implicit_invocation: false
